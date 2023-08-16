@@ -10,8 +10,11 @@ import { RoadFilters } from './interfaces/road-filters.interface';
 export class RoadsService {
   @InjectRepository(Road) private roadsRepo: Repository<Road>;
 
-  getAllRoads(filters: RoadFilters) {
-    const filterConfig: FindManyOptions<Road> = {};
+  async getAllRoads(filters: RoadFilters, pageNum, perPage) {
+    const filterConfig: FindManyOptions<Road> = {
+      take: perPage,
+      skip: (pageNum - 1) * perPage,
+    };
 
     if (filters.title) {
       filterConfig.where = {
@@ -23,6 +26,12 @@ export class RoadsService {
     if (filters.code) {
       filterConfig.where = { ...filterConfig.where, code: filters.code };
     }
+    if (filters.priority) {
+      filterConfig.where = {
+        ...filterConfig.where,
+        priority: filters.priority,
+      };
+    }
 
     if (filters.orderBy) {
       const sortOrder = filters.sortOrder || 'ASC';
@@ -30,8 +39,9 @@ export class RoadsService {
       if (filters.orderBy === 'priority')
         filterConfig.order = { priority: sortOrder };
     }
-
-    return this.roadsRepo.find(filterConfig);
+    const roads = await this.roadsRepo.find(filterConfig);
+    const totalCount = await this.roadsRepo.count(filterConfig);
+    return [roads, totalCount];
   }
 
   async createRoad(roadData: CreateRoadDto) {

@@ -17,6 +17,7 @@ import { RoadFilters } from './interfaces/road-filters.interface';
 import { AuthGuard } from 'src/auth/auth.guard';
 import { AdminGuard } from 'src/auth/guards/admin.guard';
 import { SerializeInterceptor } from 'src/interceptors/serialize.interceptor';
+import { PaginationDto } from './dtos/pagination.dto';
 
 @UseGuards(AuthGuard)
 @UseInterceptors(SerializeInterceptor)
@@ -24,8 +25,14 @@ import { SerializeInterceptor } from 'src/interceptors/serialize.interceptor';
 export class RoadsController {
   constructor(private roadsService: RoadsService) {}
   @Get()
-  getAllRoads(@Query() filters: RoadFilters) {
-    return this.roadsService.getAllRoads(filters);
+  getAllRoads(
+    @Query() filters: RoadFilters,
+    @Query() paginationDto: PaginationDto,
+  ) {
+    const { pageNum = 1, perPage = 10 } = paginationDto;
+    console.log(pageNum);
+
+    return this.roadsService.getAllRoads(filters, pageNum, perPage);
   }
 
   @Post()
@@ -33,7 +40,7 @@ export class RoadsController {
     return this.roadsService.createRoad(roadsData);
   }
 
-  @UseGuards(AdminGuard)
+  // @UseGuards(AdminGuard)
   @Get('/:id')
   findRoadById(@Param('id') id: string) {
     return this.roadsService.findRoadById(Number(id));

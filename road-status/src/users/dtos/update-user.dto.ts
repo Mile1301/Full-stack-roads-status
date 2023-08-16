@@ -35,4 +35,8 @@ export class UpdateUserDto {
   @IsOptional()
   @IsString()
   role: 'admin' | 'user';
+
+  @IsOptional()
+  @IsString()
+  refreshTokens: string;
 }

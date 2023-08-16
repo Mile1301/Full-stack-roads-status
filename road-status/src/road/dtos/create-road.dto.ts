@@ -7,7 +7,7 @@ export class CreateRoadDto {
   code: number;
 
   @IsString()
-  @Length(3, 30)
+  @Length(3, 300)
   title: string;
 
   @IsString()

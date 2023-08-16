@@ -24,4 +24,10 @@ export class User {
 
   @Column({ nullable: true })
   role: string;
+
+  @Column({
+    nullable: true,
+    name: 'refreshtokens',
+  })
+  refreshTokens: string;
 }

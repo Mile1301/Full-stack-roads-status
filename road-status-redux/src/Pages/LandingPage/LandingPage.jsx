@@ -1,20 +1,43 @@
+import { Link } from "react-router-dom";
+import { useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
+import { loginUser } from "../../state/slices/slice";
+
 const LandingPage = () => {
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+
+  const handleLoginSubmit = (e) => {
+    e.preventDefault();
+
+    const credentials = {
+      email,
+      password,
+    };
+    // Dispatch the loginUser action with the credentials object
+    dispatch(loginUser(credentials));
+    navigate("/home");
+  };
+
   return (
     <div className="bg-white dark:bg-gray-900">
       <div className="flex justify-center h-screen">
         <div
-          className="hidden bg-cover lg:block lg:w-2/3"
+          className="hidden bg-cover md:block md:w-2/3"
           style={{
             backgroundImage: `url("https://images.unsplash.com/photo-1536099629323-44806c1ea264?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=465&q=80")`,
           }}
         >
           <div className="flex items-center h-full px-20 bg-gray-900 bg-opacity-40">
             <div>
-              <h2 className="text-4xl font-bold text-white">Brand</h2>
+              <h2 className="text-4xl font-bold text-white">Road status</h2>
 
-              <p className="max-w-xl mt-3 text-gray-300">
-                Lorem ipsum dolor sit, amet consectetur adipisicing elit. In autem ipsa, nulla laboriosam dolores, repellendus perferendis libero
-                suscipit nam temporibus molestiae
+              <p className="max-w-xl mt-3 text-white italic text-xl">
+                Find the latest interactions on the road - road blocks, accidents, shows, reconstructions, detours and many more
               </p>
             </div>
           </div>
@@ -23,13 +46,13 @@ const LandingPage = () => {
         <div className="flex items-center w-full max-w-md px-6 mx-auto lg:w-2/6">
           <div className="flex-1">
             <div className="text-center">
-              <h2 className="text-4xl font-bold text-center text-gray-700 dark:text-white">Brand</h2>
+              <h2 className="text-4xl font-bold text-center text-gray-700 dark:text-white">Welcome back</h2>
 
               <p className="mt-3 text-gray-500 dark:text-gray-300">Sign in to access your account</p>
             </div>
 
             <div className="mt-8">
-              <form>
+              <form onSubmit={handleLoginSubmit}>
                 <div>
                   <label htmlFor="email" className="block mb-2 text-sm text-gray-600 dark:text-gray-200">
                     Email Address
@@ -38,6 +61,10 @@ const LandingPage = () => {
                     type="email"
                     name="email"
                     id="email"
+                    value={email}
+                    onChange={(e) => {
+                      setEmail(e.target.value);
+                    }}
                     placeholder="example@example.com"
                     className="block w-full px-4 py-2 mt-2 text-gray-700 placeholder-gray-400 bg-white border border-gray-200 rounded-md dark:placeholder-gray-600 dark:bg-gray-900 dark:text-gray-300 dark:border-gray-700 focus:border-blue-400 dark:focus:border-blue-400 focus:ring-blue-400 focus:outline-none focus:ring focus:ring-opacity-40"
                   />
@@ -57,6 +84,8 @@ const LandingPage = () => {
                     type="password"
                     name="password"
                     id="password"
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
                     placeholder="Your Password"
                     className="block w-full px-4 py-2 mt-2 text-gray-700 placeholder-gray-400 bg-white border border-gray-200 rounded-md dark:placeholder-gray-600 dark:bg-gray-900 dark:text-gray-300 dark:border-gray-700 focus:border-blue-400 dark:focus:border-blue-400 focus:ring-blue-400 focus:outline-none focus:ring focus:ring-opacity-40"
                   />
@@ -71,9 +100,9 @@ const LandingPage = () => {
 
               <p className="mt-6 text-sm text-center text-gray-400">
                 Don&#x27;t have an account yet?{" "}
-                <a href="#" className="text-blue-500 focus:outline-none focus:underline hover:underline">
+                <Link to="/register" className="text-blue-500 focus:outline-none focus:underline hover:underline">
                   Sign up
-                </a>
+                </Link>
                 .
               </p>
             </div>
